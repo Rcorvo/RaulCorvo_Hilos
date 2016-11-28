@@ -24,8 +24,8 @@ public class MainActivity extends AppCompatActivity {
     public void calculaOperacion(View view){
         int n = Integer.parseInt(entrada.getText().toString());
         salida.append(n + "! =");
-        int res = factorial(n);
-        salida.append(res + "\n");
+        MiThread thread = new MiThread(n);
+        thread.start();
     }
 
     public int factorial(int n){
@@ -35,5 +35,25 @@ public class MainActivity extends AppCompatActivity {
             SystemClock.sleep(1000);
         }
         return res;
+    }
+
+    class MiThread extends Thread{
+
+        private int n, res;
+
+        public MiThread(int n){
+            this.n = n;
+        }
+
+        @Override
+        public void run(){
+            res = factorial(n);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    salida.append(res + "\n");
+                }
+            });
+        }
     }
 }
